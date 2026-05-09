@@ -2,11 +2,11 @@
 name: confirm-before-implement
 description: >-
   Enforces alignment before coding: after Figma input, ask before adding any
-  copy, assets, or features not in the file; includes a mandatory upfront ask
-  about export-then-dev nodes and Figma links for fidelity. Before backend
-  work, state full flow (branches, data sources, fallbacks)—never add
-  unrequested paths. Use for Figma, APIs, ambiguous features. Invoke via
-  @confirm-before-implement or 先确认再开发.
+  copy, assets, or features not in the file; includes export-then-dev Figma
+  link prompts. Before backend work, present implementation alternatives in a
+  structured comparison (tables, short numbered flows, parameter checklist);
+  never add unrequested paths. Use for Figma, APIs, ambiguous features. Invoke
+  via @confirm-before-implement or 先确认再开发.
 ---
 
 # Confirm Before Implement（先对齐再开发）
@@ -63,6 +63,39 @@ User expects **no silent implementation** and **no scope creep** beyond what was
 | **全部分支** | 含 **备选策略、降级、额外数据源、fallback、重试语义**；**禁止在未事先说明的情况下新增任何一种**。 |
 | **风险与边界** | 幂等、一致性、权限、配额、失败暴露方式。 |
 
+### 与非程序员确认后端 / 插件逻辑：推荐用「清爽结构」
+
+仅说一句「要达到某某体验」**不够**；用户无法判断你将采用哪条数据路径。凡存在**多种实现方式**，应用**命名的备选方案**（方式一、方式二…），并按下列骨架输出（可视任务删减列，但保留对比感）：
+
+**1. 需求一句话**（可选）  
+
+**2. 实现方式对比表**
+
+| | **方式一（自拟标题）** | **方式二（自拟标题）** |
+|--|--|--|
+| **核心依赖** | 白话说明依赖哪类能力 | … |
+| **像什么** | 一两句比喻或结果形态 | … |
+| **典型风险** | 用量、误判、重复等 | … |
+
+**3. 每种方式的流程（短步骤，每条一行为宜）**  
+
+同一阶段命名一致，例如：**读数据 → 处理 → 汇总 → 写回**（或插件语境下的等价阶段）。
+
+**4. 待定参数表（请用户勾选或答复）**
+
+| 项 | 选项示例 |
+|----|----------|
+| 采用哪种方式 | 仅方式一 / 仅方式二 / 都做（如插件内可选） |
+| 输出内容与范围 | … |
+| 上限与去重 | … |
+| 失败时行为 | **默认仅提示**；任何降级须单独成行并经同意 |
+
+**5. 收尾一句**  
+
+请用户**选定方式并填参数**；确认后再汇总成「固定说明书」并开始编码。
+
+**示例（领域仅为说明两条路径可截然不同）**：「歌单生成推荐」时，**逐首走官方相似/推荐链路**与 **按歌名搜索凑曲**是不同机制——必须摊开让用户选，不得默认替代路径。
+
 ### 后端逻辑：禁止私自加「备选路径」
 
 **不限定于某一类产品（音乐推荐等仅作历史示例）。** 只要涉及后端逻辑：**凡存在第二种实现方式**（另一接口、另一查询策略、另一缓存层、默默兜底的数据源等），都必须先在方案里**逐项列出是否会写进代码、默认是否启用**，由用户确认后再实现。
@@ -76,15 +109,15 @@ User expects **no silent implementation** and **no scope creep** beyond what was
 ## Response shape（建议回复结构）
 
 1. **Open questions** — 含 **Step 1a 固定提问**（导出后再开发？链接？）；含稿外文案/图/功能；必要时停在提问处。
-2. **Proposed implementation** — **凡涉后端须附分支/数据源一览**；无隐藏 fallback。
+2. **Proposed implementation** — **凡涉后端**：附 **分支/数据源一览**；面向非程序员时优先用 **对比表 + 短流程 + 参数表**（见上节）；无隐藏 fallback。
 3. **Implementation** — 确认后再写代码与变更说明。
 
 ---
 
 ## Checklist（自用）
 
-- [ ] **Step 1a**：已发起「导出后再开发」固定提问；已收集 **node 链接**或得到「无需 / 全代码还原」。
+- [ ] **Step 1a**：已发起「导出后再开发」固定提问；已收集 **指向各目标图层的 Figma 链接**（或得到「无需 / 全代码还原」）。
 - [ ] 未擅自增加稿未要求的文案、图片或功能；需要的已问过。
 - [ ] Step 1b 待确认项已澄清。
-- [ ] Step 2 已说明逻辑；**凡涉后端已列出全部路径与数据源并得到同意**，未私自加备选逻辑。
+- [ ] Step 2 已说明逻辑；**凡涉后端已列出全部路径与数据源并得到同意**（非程序员场景已尽量使用 **对比表 + 短流程 + 参数表**），未私自加备选逻辑。
 - [ ] 仅在此之后：下载资源、改文件、跑命令。
