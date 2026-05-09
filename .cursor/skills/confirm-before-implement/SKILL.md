@@ -2,10 +2,11 @@
 name: confirm-before-implement
 description: >-
   Enforces alignment before coding: after Figma input, ask before adding any
-  copy, assets, or features not in the file. Before any work involving
-  backend logic, state the full flow (all branches, data sources, fallbacks),
-  wait for agreement—never add unrequested alternative paths. Use for Figma,
-  APIs, or ambiguous features. Invoke via @confirm-before-implement or 先确认再开发.
+  copy, assets, or features not in the file; includes a mandatory upfront ask
+  about export-then-dev nodes and Figma links for fidelity. Before backend
+  work, state full flow (branches, data sources, fallbacks)—never add
+  unrequested paths. Use for Figma, APIs, ambiguous features. Invoke via
+  @confirm-before-implement or 先确认再开发.
 ---
 
 # Confirm Before Implement（先对齐再开发）
@@ -26,10 +27,27 @@ User expects **no silent implementation** and **no scope creep** beyond what was
 
 在拉 MCP、改样式、下资源、写代码之前：
 
+### 1a — 导出优先（固定前置提问，涉及从 Figma 落地界面时必做）
+
+**目的**：提前说明「先导出成图再开发」往往还原更好，避免用户踩坑（复杂叠层、左侧图标组、带 Noise/纹理/非纯色装饰的容器等，代码硬拼容易失真）。
+
+在用户仅给出父 Frame / 整页链接时也要问；尚未读取 MCP 前即可发问。
+
+**固定话术（可依语境微调，但必须问到）：**
+
+> 是否存在需要先 **导出为位图（建议默认 @2x）再写入代码** 的组件或局部（例如多个图层叠在一起的图标、卡片装饰底等）？  
+> — 若有：请提供 **带 `node-id` 的 Figma 链接**（每个需要单独成片导出的 Frame/Group **各一条或多条**均可）。  
+> — 若无：请明确回复例如「无」「全部按代码还原即可」。
+
+说明：**不能完全依赖自动识别**复杂 Effect / 纹理；以用户给出的节点链接为主。收集答复后再拉 MCP、再讨论具体导出清单与落盘路径。
+
+### 1b — 其余确认（与原先一致）
+
 1. **复述**稿内范围（版面、交互、已有文案与图层）。
 2. **禁止自作主张**：不要在未询问的情况下**新增或删减**「稿里没有明确要求」的**文案、图片、图标、模块或功能点**。若你认为有帮助，先 **提问：是否需要**，得到肯定答复后再做。
 3. **列出待确认项**，例如：交互是否与既有约定一致、整图 vs HTML、资源命名与路径、断点策略等。
-4. **等待用户回复**后再进入 Step 2 与编码。
+4. **栅格资源**：对已确认的节点，优先 **整层导出**（默认 **2x**，1x 易糊）；带非纯色背景/装饰/纹理的容器，**优先栅格化父层**，避免默认用代码临摹每一种 Effect。
+5. **等待用户回复**后再进入 Step 2 与编码。
 
 ---
 
@@ -57,7 +75,7 @@ User expects **no silent implementation** and **no scope creep** beyond what was
 
 ## Response shape（建议回复结构）
 
-1. **Open questions**（含：稿外是否要加文案/图/功能）— 编号列表，必要时停在提问处。
+1. **Open questions** — 含 **Step 1a 固定提问**（导出后再开发？链接？）；含稿外文案/图/功能；必要时停在提问处。
 2. **Proposed implementation** — **凡涉后端须附分支/数据源一览**；无隐藏 fallback。
 3. **Implementation** — 确认后再写代码与变更说明。
 
@@ -65,7 +83,8 @@ User expects **no silent implementation** and **no scope creep** beyond what was
 
 ## Checklist（自用）
 
+- [ ] **Step 1a**：已发起「导出后再开发」固定提问；已收集 **node 链接**或得到「无需 / 全代码还原」。
 - [ ] 未擅自增加稿未要求的文案、图片或功能；需要的已问过。
-- [ ] Step 1 待确认项已澄清。
+- [ ] Step 1b 待确认项已澄清。
 - [ ] Step 2 已说明逻辑；**凡涉后端已列出全部路径与数据源并得到同意**，未私自加备选逻辑。
 - [ ] 仅在此之后：下载资源、改文件、跑命令。
