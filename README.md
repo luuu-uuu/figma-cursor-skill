@@ -1,4 +1,4 @@
-# confirm-before-implement（Cursor Skill）
+# figma-mcp-skill
 
 在写代码前先和用户对齐：**Figma** 不擅自加稿外文案/图/功能；**涉及后端**时先把完整实现路径（含所有分支与数据源）说清楚，确认后再动手。
 
